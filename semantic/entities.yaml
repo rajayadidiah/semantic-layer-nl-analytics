@@ -1,0 +1,37 @@
+definitions:
+- name: valid_trip
+  description: 'PROJECT CONVENTION: analyzable
+    Q1 trip; not an official TLC definition.'
+  rule: 'pickup_at IS NOT NULL AND dropoff_at IS NOT NULL
+
+    AND pickup_at <= dropoff_at
+
+    AND pickup_at >= TIMESTAMP ''2026-01-01'' AND pickup_at < TIMESTAMP ''2026-04-01''
+
+    AND trip_distance > 0 AND fare_amount >= 0 AND total_amount >= 0
+
+    AND pickup_zone_id IN (SELECT zone_id FROM taxi_zones WHERE zone_id NOT IN (264,
+    265))
+
+    AND dropoff_zone_id IN (SELECT zone_id FROM taxi_zones WHERE zone_id NOT IN (264,
+    265))'
+  required_fields:
+  - pickup_at
+  - dropoff_at
+  - trip_distance
+  - fare_amount
+  - total_amount
+  - pickup_zone_id
+  - dropoff_zone_id
+  applicable_service_types:
+  - yellow
+  - green
+  exclusions:
+  - Missing rule inputs
+  - Reversed timestamps
+  - Nonpositive distance
+  - Negative fare or total
+  - Pickup outside Q1 2026
+  - Unmatched zones or IDs 264/265
+  default_time_dimension: pickup_at
+  version: 0.1.0

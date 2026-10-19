@@ -1,0 +1,31 @@
+definitions:
+- name: pickup_geography
+  description: 'PROJECT CONVENTION: pickup zone/borough via left join; unmatched zones
+    remain NULL.'
+  rule: canonical_trips.pickup_zone_id = pickup_zones.zone_id
+  required_fields:
+  - pickup_zone_id
+  - taxi_zones.zone_id
+  - taxi_zones.zone_name
+  - taxi_zones.borough
+  applicable_service_types:
+  - yellow
+  - green
+  exclusions: []
+  default_time_dimension: pickup_at
+  version: 0.1.0
+- name: dropoff_geography
+  description: 'PROJECT CONVENTION: dropoff zone/borough via a distinct left-join
+    alias.'
+  rule: canonical_trips.dropoff_zone_id = dropoff_zones.zone_id
+  required_fields:
+  - dropoff_zone_id
+  - taxi_zones.zone_id
+  - taxi_zones.zone_name
+  - taxi_zones.borough
+  applicable_service_types:
+  - yellow
+  - green
+  exclusions: []
+  default_time_dimension: dropoff_at
+  version: 0.1.0

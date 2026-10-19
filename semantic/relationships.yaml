@@ -1,0 +1,16 @@
+definitions:
+- name: trip_zone_relationships
+  description: 'PROJECT CONVENTION: many trips to one zone per role; zone IDs must
+    be unique.'
+  rule: LEFT JOIN taxi_zones pickup_zones ON pickup_zone_id = pickup_zones.zone_id;
+    LEFT JOIN taxi_zones dropoff_zones ON dropoff_zone_id = dropoff_zones.zone_id
+  required_fields:
+  - pickup_zone_id
+  - dropoff_zone_id
+  - taxi_zones.zone_id
+  applicable_service_types:
+  - yellow
+  - green
+  exclusions: []
+  default_time_dimension: null
+  version: 0.1.0

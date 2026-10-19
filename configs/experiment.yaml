@@ -1,0 +1,9 @@
+version: 1
+validator_passes: 1
+llm_retries: 0
+shared_abstention_policy: Return UNSUPPORTED when the available data cannot answer the question.
+configurations:
+  A: {semantics: false, validator: false}
+  B: {semantics: true, validator: false}
+  C: {semantics: false, validator: true}
+  D: {semantics: true, validator: true}

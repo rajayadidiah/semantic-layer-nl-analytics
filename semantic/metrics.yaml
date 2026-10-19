@@ -1,0 +1,79 @@
+definitions:
+- name: trip_volume
+  description: 'PROJECT CONVENTION: count trips satisfying valid_trip.'
+  rule: 'COUNT(*) FILTER (WHERE pickup_at IS NOT NULL AND dropoff_at IS NOT NULL
+
+    AND pickup_at <= dropoff_at
+
+    AND pickup_at >= TIMESTAMP ''2026-01-01'' AND pickup_at < TIMESTAMP ''2026-04-01''
+
+    AND trip_distance > 0 AND fare_amount >= 0 AND total_amount >= 0
+
+    AND pickup_zone_id IN (SELECT zone_id FROM taxi_zones WHERE zone_id NOT IN (264,
+    265))
+
+    AND dropoff_zone_id IN (SELECT zone_id FROM taxi_zones WHERE zone_id NOT IN (264,
+    265)))'
+  required_fields:
+  - valid_trip
+  applicable_service_types:
+  - yellow
+  - green
+  exclusions:
+  - All rows failing valid_trip
+  default_time_dimension: pickup_at
+  version: 0.1.0
+- name: average_fare
+  description: 'PROJECT CONVENTION: arithmetic mean of base fare_amount among valid_trip
+    rows; excludes tips and surcharges.'
+  rule: 'AVG(fare_amount) FILTER (WHERE pickup_at IS NOT NULL AND dropoff_at IS NOT
+    NULL
+
+    AND pickup_at <= dropoff_at
+
+    AND pickup_at >= TIMESTAMP ''2026-01-01'' AND pickup_at < TIMESTAMP ''2026-04-01''
+
+    AND trip_distance > 0 AND fare_amount >= 0 AND total_amount >= 0
+
+    AND pickup_zone_id IN (SELECT zone_id FROM taxi_zones WHERE zone_id NOT IN (264,
+    265))
+
+    AND dropoff_zone_id IN (SELECT zone_id FROM taxi_zones WHERE zone_id NOT IN (264,
+    265)))'
+  required_fields:
+  - valid_trip
+  - fare_amount
+  applicable_service_types:
+  - yellow
+  - green
+  exclusions:
+  - All rows failing valid_trip
+  default_time_dimension: pickup_at
+  version: 0.1.0
+- name: average_trip_distance
+  description: 'PROJECT CONVENTION: arithmetic mean of recorded miles among valid_trip
+    rows.'
+  rule: 'AVG(trip_distance) FILTER (WHERE pickup_at IS NOT NULL AND dropoff_at IS
+    NOT NULL
+
+    AND pickup_at <= dropoff_at
+
+    AND pickup_at >= TIMESTAMP ''2026-01-01'' AND pickup_at < TIMESTAMP ''2026-04-01''
+
+    AND trip_distance > 0 AND fare_amount >= 0 AND total_amount >= 0
+
+    AND pickup_zone_id IN (SELECT zone_id FROM taxi_zones WHERE zone_id NOT IN (264,
+    265))
+
+    AND dropoff_zone_id IN (SELECT zone_id FROM taxi_zones WHERE zone_id NOT IN (264,
+    265)))'
+  required_fields:
+  - valid_trip
+  - trip_distance
+  applicable_service_types:
+  - yellow
+  - green
+  exclusions:
+  - All rows failing valid_trip
+  default_time_dimension: pickup_at
+  version: 0.1.0
