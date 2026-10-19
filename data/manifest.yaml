@@ -1,0 +1,434 @@
+version: 1
+status: frozen
+source_page: https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page
+files:
+- filename: yellow_tripdata_2026-01.parquet
+  service: yellow
+  url: https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2026-01.parquet
+  sha256: 8b3933fe6f0d7b6d8826613c0dd724edc680ff7c49e2bd4c7635c05102728637
+  size_bytes: 64165080
+  row_count: 3724889
+  schema:
+  - name: VendorID
+    type: int32
+    nullable: true
+  - name: tpep_pickup_datetime
+    type: timestamp[us]
+    nullable: true
+  - name: tpep_dropoff_datetime
+    type: timestamp[us]
+    nullable: true
+  - name: passenger_count
+    type: int64
+    nullable: true
+  - name: trip_distance
+    type: double
+    nullable: true
+  - name: RatecodeID
+    type: int64
+    nullable: true
+  - name: store_and_fwd_flag
+    type: large_string
+    nullable: true
+  - name: PULocationID
+    type: int32
+    nullable: true
+  - name: DOLocationID
+    type: int32
+    nullable: true
+  - name: payment_type
+    type: int64
+    nullable: true
+  - name: fare_amount
+    type: double
+    nullable: true
+  - name: extra
+    type: double
+    nullable: true
+  - name: mta_tax
+    type: double
+    nullable: true
+  - name: tip_amount
+    type: double
+    nullable: true
+  - name: tolls_amount
+    type: double
+    nullable: true
+  - name: improvement_surcharge
+    type: double
+    nullable: true
+  - name: total_amount
+    type: double
+    nullable: true
+  - name: congestion_surcharge
+    type: double
+    nullable: true
+  - name: Airport_fee
+    type: double
+    nullable: true
+  - name: cbd_congestion_fee
+    type: double
+    nullable: true
+- filename: yellow_tripdata_2026-02.parquet
+  service: yellow
+  url: https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2026-02.parquet
+  sha256: 5352ca800f29c40a221ed5b0c6392c451fde7fcd236a73651bd5aea74713a26c
+  size_bytes: 58683353
+  row_count: 3399866
+  schema:
+  - name: VendorID
+    type: int32
+    nullable: true
+  - name: tpep_pickup_datetime
+    type: timestamp[us]
+    nullable: true
+  - name: tpep_dropoff_datetime
+    type: timestamp[us]
+    nullable: true
+  - name: passenger_count
+    type: int64
+    nullable: true
+  - name: trip_distance
+    type: double
+    nullable: true
+  - name: RatecodeID
+    type: int64
+    nullable: true
+  - name: store_and_fwd_flag
+    type: large_string
+    nullable: true
+  - name: PULocationID
+    type: int32
+    nullable: true
+  - name: DOLocationID
+    type: int32
+    nullable: true
+  - name: payment_type
+    type: int64
+    nullable: true
+  - name: fare_amount
+    type: double
+    nullable: true
+  - name: extra
+    type: double
+    nullable: true
+  - name: mta_tax
+    type: double
+    nullable: true
+  - name: tip_amount
+    type: double
+    nullable: true
+  - name: tolls_amount
+    type: double
+    nullable: true
+  - name: improvement_surcharge
+    type: double
+    nullable: true
+  - name: total_amount
+    type: double
+    nullable: true
+  - name: congestion_surcharge
+    type: double
+    nullable: true
+  - name: Airport_fee
+    type: double
+    nullable: true
+  - name: cbd_congestion_fee
+    type: double
+    nullable: true
+- filename: yellow_tripdata_2026-03.parquet
+  service: yellow
+  url: https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2026-03.parquet
+  sha256: d7af794a7ac06cbbb5afb4d1df9e86d84f2e878584de708ff2ffca4bd7d234d9
+  size_bytes: 67891249
+  row_count: 3952451
+  schema:
+  - name: VendorID
+    type: int32
+    nullable: true
+  - name: tpep_pickup_datetime
+    type: timestamp[us]
+    nullable: true
+  - name: tpep_dropoff_datetime
+    type: timestamp[us]
+    nullable: true
+  - name: passenger_count
+    type: int64
+    nullable: true
+  - name: trip_distance
+    type: double
+    nullable: true
+  - name: RatecodeID
+    type: int64
+    nullable: true
+  - name: store_and_fwd_flag
+    type: large_string
+    nullable: true
+  - name: PULocationID
+    type: int32
+    nullable: true
+  - name: DOLocationID
+    type: int32
+    nullable: true
+  - name: payment_type
+    type: int64
+    nullable: true
+  - name: fare_amount
+    type: double
+    nullable: true
+  - name: extra
+    type: double
+    nullable: true
+  - name: mta_tax
+    type: double
+    nullable: true
+  - name: tip_amount
+    type: double
+    nullable: true
+  - name: tolls_amount
+    type: double
+    nullable: true
+  - name: improvement_surcharge
+    type: double
+    nullable: true
+  - name: total_amount
+    type: double
+    nullable: true
+  - name: congestion_surcharge
+    type: double
+    nullable: true
+  - name: Airport_fee
+    type: double
+    nullable: true
+  - name: cbd_congestion_fee
+    type: double
+    nullable: true
+- filename: green_tripdata_2026-01.parquet
+  service: green
+  url: https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2026-01.parquet
+  sha256: b0b188cd9ded91a9dfc931d9250aaca09fe388355d87802422707c6fc14762e0
+  size_bytes: 991656
+  row_count: 40272
+  schema:
+  - name: VendorID
+    type: int32
+    nullable: true
+  - name: lpep_pickup_datetime
+    type: timestamp[us]
+    nullable: true
+  - name: lpep_dropoff_datetime
+    type: timestamp[us]
+    nullable: true
+  - name: store_and_fwd_flag
+    type: large_string
+    nullable: true
+  - name: RatecodeID
+    type: int64
+    nullable: true
+  - name: PULocationID
+    type: int32
+    nullable: true
+  - name: DOLocationID
+    type: int32
+    nullable: true
+  - name: passenger_count
+    type: int64
+    nullable: true
+  - name: trip_distance
+    type: double
+    nullable: true
+  - name: fare_amount
+    type: double
+    nullable: true
+  - name: extra
+    type: double
+    nullable: true
+  - name: mta_tax
+    type: double
+    nullable: true
+  - name: tip_amount
+    type: double
+    nullable: true
+  - name: tolls_amount
+    type: double
+    nullable: true
+  - name: ehail_fee
+    type: double
+    nullable: true
+  - name: improvement_surcharge
+    type: double
+    nullable: true
+  - name: total_amount
+    type: double
+    nullable: true
+  - name: payment_type
+    type: int64
+    nullable: true
+  - name: trip_type
+    type: int64
+    nullable: true
+  - name: congestion_surcharge
+    type: double
+    nullable: true
+  - name: cbd_congestion_fee
+    type: double
+    nullable: true
+- filename: green_tripdata_2026-02.parquet
+  service: green
+  url: https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2026-02.parquet
+  sha256: 2f7e3f379b2a14d675aed7eb9318a663dfb290eb11dbc66efbee581b63c3c962
+  size_bytes: 920753
+  row_count: 37373
+  schema:
+  - name: VendorID
+    type: int32
+    nullable: true
+  - name: lpep_pickup_datetime
+    type: timestamp[us]
+    nullable: true
+  - name: lpep_dropoff_datetime
+    type: timestamp[us]
+    nullable: true
+  - name: store_and_fwd_flag
+    type: large_string
+    nullable: true
+  - name: RatecodeID
+    type: int64
+    nullable: true
+  - name: PULocationID
+    type: int32
+    nullable: true
+  - name: DOLocationID
+    type: int32
+    nullable: true
+  - name: passenger_count
+    type: int64
+    nullable: true
+  - name: trip_distance
+    type: double
+    nullable: true
+  - name: fare_amount
+    type: double
+    nullable: true
+  - name: extra
+    type: double
+    nullable: true
+  - name: mta_tax
+    type: double
+    nullable: true
+  - name: tip_amount
+    type: double
+    nullable: true
+  - name: tolls_amount
+    type: double
+    nullable: true
+  - name: ehail_fee
+    type: double
+    nullable: true
+  - name: improvement_surcharge
+    type: double
+    nullable: true
+  - name: total_amount
+    type: double
+    nullable: true
+  - name: payment_type
+    type: int64
+    nullable: true
+  - name: trip_type
+    type: int64
+    nullable: true
+  - name: congestion_surcharge
+    type: double
+    nullable: true
+  - name: cbd_congestion_fee
+    type: double
+    nullable: true
+- filename: green_tripdata_2026-03.parquet
+  service: green
+  url: https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2026-03.parquet
+  sha256: 60c8bdfc0aa7826a2d6d2a6cca0f0e0dcb2d8aa7336212a45382794bb55b9cc0
+  size_bytes: 1082530
+  row_count: 44208
+  schema:
+  - name: VendorID
+    type: int32
+    nullable: true
+  - name: lpep_pickup_datetime
+    type: timestamp[us]
+    nullable: true
+  - name: lpep_dropoff_datetime
+    type: timestamp[us]
+    nullable: true
+  - name: store_and_fwd_flag
+    type: large_string
+    nullable: true
+  - name: RatecodeID
+    type: int64
+    nullable: true
+  - name: PULocationID
+    type: int32
+    nullable: true
+  - name: DOLocationID
+    type: int32
+    nullable: true
+  - name: passenger_count
+    type: int64
+    nullable: true
+  - name: trip_distance
+    type: double
+    nullable: true
+  - name: fare_amount
+    type: double
+    nullable: true
+  - name: extra
+    type: double
+    nullable: true
+  - name: mta_tax
+    type: double
+    nullable: true
+  - name: tip_amount
+    type: double
+    nullable: true
+  - name: tolls_amount
+    type: double
+    nullable: true
+  - name: ehail_fee
+    type: double
+    nullable: true
+  - name: improvement_surcharge
+    type: double
+    nullable: true
+  - name: total_amount
+    type: double
+    nullable: true
+  - name: payment_type
+    type: int64
+    nullable: true
+  - name: trip_type
+    type: int64
+    nullable: true
+  - name: congestion_surcharge
+    type: double
+    nullable: true
+  - name: cbd_congestion_fee
+    type: double
+    nullable: true
+- filename: taxi_zone_lookup.csv
+  service: zones
+  url: https://d37ci6vzurychx.cloudfront.net/misc/taxi_zone_lookup.csv
+  sha256: 1a99e105092230f8620f301edcca7f80d3080642ff404d28ed957d3fa222c8ed
+  size_bytes: 12331
+  row_count: 265
+  schema:
+  - name: LocationID
+    type: int64
+    nullable: true
+  - name: Borough
+    type: string
+    nullable: true
+  - name: Zone
+    type: string
+    nullable: true
+  - name: service_zone
+    type: string
+    nullable: true
