@@ -21,18 +21,34 @@ to B/D. The validator runs once in C/D; there is no LLM repair/retry loop. This 
 Text-to-SQL experiment, with no agents, RAG, vector database, frontend, or web service.
 `configs/experiment.yaml` freezes this design. No comparative accuracy results exist yet.
 
-## Phase 1 status (October 19, 2026)
+## Phase 2 status (November 18, 2026)
 
-Implemented and verified: frozen official-source downloads, real schema inspection, canonical
-DuckDB build (11,199,059 trip records and 265 lookup rows), raw quality reporting, versioned
-semantic conventions, 12 benchmark questions, provider interface, single-pass SQL validator,
-and the four experimental cells. All 10 answerable gold queries execute against the real database
-and synthetic fixtures. Tests and Ruff pass, including the real-data integration test.
+Phase 1 established the frozen official-source pipeline, canonical DuckDB model, data-quality
+reporting, versioned semantic conventions, provider interface, SQL validator, and A/B/C/D scaffold.
+Phase 2 turns that scaffold into an executable evaluation system.
 
-The **live LLM remains untested**: neither required OpenAI environment variable was present.
-The provider protocol and deterministic fake are tested offline. The final comparative experiment,
-advanced semantic validation, and expanded benchmark are later work. See
-[the class-update evidence](docs/week1_update.md).
+Implemented and verified in Phase 2:
+
+- The benchmark is expanded from 12 to **50 questions**: 42 answerable gold-SQL cases and
+  8 intentionally unsupported cases. Questions carry family, difficulty, order-sensitivity, and
+  numeric-tolerance metadata.
+- Generated SQL can pass through a shared read-only runtime safety gate, execute against DuckDB,
+  and return structured execution outcomes without changing the A/B/C/D experimental validator.
+- Result scoring compares generated outputs with gold outputs while handling column order,
+  optional row-order sensitivity, floating-point tolerance, nulls, and result-size limits.
+- The A/B/C/D runner records model output, validator status, execution status, correctness,
+  latency, and failure category as structured JSONL.
+- The reporting module aggregates overall, answerable, unsupported, and semantic accuracy,
+  median latency, validator rejections, execution errors, and failure categories.
+- CI passes Ruff and **52 non-integration tests**. A dedicated real-data verification run
+  downloaded the seven official Q1 files, rebuilt all **11,199,059** trip rows, executed all
+  **42 answerable gold queries**, intentionally skipped the 8 unsupported questions, and passed
+  the real-data integration test.
+
+The **live LLM experiment is still pending**. No A/B/C/D accuracy or latency comparison is claimed
+yet. The next milestone is a labeled live smoke test, followed by the full 200-run comparison
+(50 questions × 4 configurations), repeated runs where needed, and final failure/statistical
+analysis. See [the November progress evidence](docs/progress_update_nov18.md).
 
 ## Dataset
 
@@ -66,6 +82,10 @@ make build-db
 make verify-benchmark
 make test
 make lint
+# After setting OPENAI_API_KEY and OPENAI_MODEL:
+make smoke-llm
+make run-experiment
+make summarize-experiment
 ```
 
 `make install` installs the version lock and the editable package. All commands use relative paths.
@@ -98,18 +118,25 @@ The frozen manifest, generated schema report, and quality summary document are t
 fare/total, out-of-Q1 pickup timestamps, unmatched zones, and zone IDs 264/265. These exclusions
 apply only when a query asks for the convention. No rows are deleted from canonical storage.
 
-`benchmark/questions.jsonl` has 10 answerable gold queries and 2 deliberately unsupported questions.
-Three questions explicitly depend on project semantics. Raw-record questions have no implicit
-validity filter. Salary/profit inputs are absent from the canonical model, and from all six observed source schemas and the lookup. This is an initial benchmark,
-not the final 80–100-question study. No expected real answers have been fabricated.
+``benchmark/questions.jsonl` has **50 reviewed questions**: 42 answerable gold-SQL cases and
+8 deliberately unsupported cases. It includes aggregation, temporal, quality, geographic,
+business-semantic, and unsupported families. Benchmark records also carry difficulty,
+order-sensitivity, and numeric-tolerance metadata. Raw-record questions have no implicit validity
+filter. Unsupported questions cover information absent from the observed TLC schemas, such as
+driver salary, fuel expense, rider age, weather effects, driver identity, and dispatch time.
+The final study may expand beyond 50 questions if time permits, but no model-accuracy numbers are
+reported until the live experiment is run.
 
 ## Baseline and validator
 
 `semantic_analytics.llm.baseline` supplies `Provider`, `FakeProvider`, and `OpenAIProvider`.
 `generate(question, schema, provider, semantics=False)` returns a validated JSON SQL/UNSUPPORTED
-response. `evaluation.run.run_question` selects A/B/C/D and performs one optional validation pass;
-it does not execute untrusted generated SQL. Obtain the schema with
-`validation.sql.database_schema(connection)` from the built DuckDB database.
+response. `evaluation.run.run_question` selects A/B/C/D and performs the optional experimental
+validator pass. `evaluation.execution` provides the shared runtime read-only safety gate,
+`evaluation.scoring` compares executed results against gold outputs, and
+`evaluation.experiment` runs the complete A/B/C/D benchmark and writes structured JSONL.
+`evaluation.report` aggregates configuration-level metrics and failure categories. Obtain the
+database schema with `validation.sql.database_schema(connection)`.
 
 For a later live smoke test, export `OPENAI_API_KEY` and `OPENAI_MODEL` securely in your shell.
 There is **no default model** and no automatic `.env` loading. `.env.example` contains names only.
@@ -119,8 +146,10 @@ Do not commit secrets or log credentials. Provider protocol and prompt behavior 
 
 `validation.sql.validate` uses SQLGlot to check one SELECT, reject writes/DDL, external table scans,
 unknown tables and resolvable unknown columns. It supports CTEs, joins, and set queries. This is
-static validation, **not an execution sandbox or advanced semantic validator**. Later execution
-needs separate time/resource restrictions and a read-only database connection.
+the experimental validator used only in C/D. A separate shared runtime guard is used before
+execution in every cell so A/B are still protected from writes and external file scans without
+receiving the C/D schema validator. Generated SQL executes only through a read-only DuckDB
+connection with an output-row limit.
 
 ## Tests and CI
 
@@ -130,7 +159,10 @@ make lint
 .venv/bin/python -m pytest -q -m integration  # run after the real-data pipeline
 ```
 
-CI installs pinned dependencies and runs Ruff and synthetic pytest checks on Python 3.11. It does
-not download TLC data or contact an LLM. Tests exercise freezing/idempotency/tamper rejection,
-canonical transformation and preserved anomalies, quality counts, semantics, gold queries,
-static SQL rejection, shared abstention, provider protocol, and no automatic retries.
+CI installs pinned dependencies and runs Ruff plus non-integration pytest checks on Python 3.11;
+the current suite reports **52 passing tests**. Tests cover ingestion integrity, canonical
+transformation, quality counts, semantic definitions, the 50-question benchmark, result
+normalization, numeric tolerance, read-only execution, A/B/C/D routing, validator separation,
+abstention, provider protocol, structured reporting, and no automatic retries. A dedicated
+November 18 verification run also rebuilt the real TLC database and passed the real-data
+integration test. CI never contacts a live LLM or stores API credentials.
