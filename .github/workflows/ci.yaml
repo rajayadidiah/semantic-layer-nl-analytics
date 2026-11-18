@@ -1,4 +1,4 @@
-name: Phase 1 checks
+name: Project checks
 on: [push, pull_request]
 jobs:
   checks:
@@ -12,3 +12,19 @@ jobs:
       - run: python -m pip install --no-deps -e .
       - run: ruff check .
       - run: pytest -q -m 'not integration'
+
+  real-data:
+    if: github.ref == 'refs/heads/phase2-evaluation-nov18'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -r requirements.lock
+      - run: python -m pip install --no-deps -e .
+      - run: python -m semantic_analytics.ingestion.download
+      - run: python -m semantic_analytics.ingestion.inspect
+      - run: python -m semantic_analytics.database.build
+      - run: python -m semantic_analytics.evaluation.benchmark
+      - run: pytest -q -m integration

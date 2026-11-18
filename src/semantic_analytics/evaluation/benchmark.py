@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 import duckdb
-from pydantic import BaseModel, ConfigDict, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from semantic_analytics.validation.sql import database_schema, validate
 
@@ -18,11 +18,16 @@ class Question(BaseModel):
     requires_semantics: bool
     gold_sql: str | None
     notes: str
+    difficulty: str = "medium"
+    order_sensitive: bool = False
+    numeric_tolerance: float = Field(default=1e-6, ge=0)
 
     @model_validator(mode="after")
     def gold_present(self):
         if self.answerable != bool(self.gold_sql):
             raise ValueError("Only answerable questions must have gold SQL")
+        if not self.answerable and self.order_sensitive:
+            raise ValueError("Unsupported questions cannot be order-sensitive")
         return self
 
 
@@ -45,7 +50,6 @@ def verify(con, questions):
         result = validate(q.gold_sql, schema)
         if not result.valid:
             raise ValueError(f"{q.id}: {result.errors}")
-        # Stream results so future larger gold queries need not fit in Python memory.
         cursor = con.execute(q.gold_sql)
         count = 0
         while batch := cursor.fetchmany(1000):
