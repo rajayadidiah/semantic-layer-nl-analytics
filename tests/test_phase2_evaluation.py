@@ -68,15 +68,25 @@ def test_result_scoring_respects_required_order():
     assert result.reason == "ordered_value_mismatch"
 
 
-def test_result_scoring_detects_column_mismatch():
+def test_result_scoring_allows_cosmetic_alias_changes():
     result = compare_result_sets(
         ["zone", "value"],
         [["A", 1.0]],
-        ["zone", "wrong"],
+        ["pickup_zone", "metric"],
         [["A", 1.0]],
     )
+    assert result.correct
+
+
+def test_result_scoring_detects_column_count_mismatch():
+    result = compare_result_sets(
+        ["zone", "value"],
+        [["A", 1.0]],
+        ["zone"],
+        [["A"]],
+    )
     assert not result.correct
-    assert result.reason == "column_mismatch"
+    assert result.reason == "column_count_mismatch"
 
 
 def test_read_only_execution_and_safety_gate(con):
