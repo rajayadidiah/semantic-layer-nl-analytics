@@ -61,32 +61,35 @@ def compare_result_sets(
     order_sensitive: bool = False,
     numeric_tolerance: float = 1e-6,
 ) -> ComparisonResult:
-    """Compare two result sets while allowing column reordering and numeric tolerance."""
+    """Compare result values while tolerating cosmetic aliases and numeric noise."""
     if numeric_tolerance < 0:
         raise ValueError("numeric_tolerance must be nonnegative")
 
     gold_keys = [_column_key(name) for name in gold_columns]
     actual_keys = [_column_key(name) for name in actual_columns]
-    if len(set(gold_keys)) != len(gold_keys) or len(set(actual_keys)) != len(actual_keys):
+    if len(gold_keys) != len(actual_keys):
         return ComparisonResult(
             correct=False,
-            reason="duplicate_column_names",
-            gold_row_count=len(gold_rows),
-            actual_row_count=len(actual_rows),
-        )
-    if set(gold_keys) != set(actual_keys):
-        return ComparisonResult(
-            correct=False,
-            reason="column_mismatch",
+            reason="column_count_mismatch",
             gold_row_count=len(gold_rows),
             actual_row_count=len(actual_rows),
         )
 
-    actual_index = {name: index for index, name in enumerate(actual_keys)}
-    reordered_actual = [
-        [row[actual_index[name]] for name in gold_keys]
-        for row in actual_rows
-    ]
+    # Prefer name-based alignment when both result sets expose the same unique names.
+    # If an LLM uses different aliases for otherwise equivalent expressions, fall back
+    # to positional comparison so cosmetic naming does not create a false negative.
+    names_are_unique = (
+        len(set(gold_keys)) == len(gold_keys)
+        and len(set(actual_keys)) == len(actual_keys)
+    )
+    if names_are_unique and set(gold_keys) == set(actual_keys):
+        actual_index = {name: index for index, name in enumerate(actual_keys)}
+        reordered_actual = [
+            [row[actual_index[name]] for name in gold_keys]
+            for row in actual_rows
+        ]
+    else:
+        reordered_actual = [list(row) for row in actual_rows]
 
     if len(gold_rows) != len(reordered_actual):
         return ComparisonResult(
