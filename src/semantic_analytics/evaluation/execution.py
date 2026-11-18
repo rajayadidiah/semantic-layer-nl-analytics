@@ -8,8 +8,8 @@ from __future__ import annotations
 
 from time import perf_counter
 
-from pydantic import BaseModel
 import sqlglot
+from pydantic import BaseModel
 from sqlglot import exp
 
 from semantic_analytics.validation.sql import ValidationResult
