@@ -104,10 +104,10 @@ def test_semantic_definitions(con):
 
 def test_benchmark_parse_and_verify(con):
     questions = load_questions()
-    assert len(questions) == 12
-    assert sum(not q.answerable for q in questions) == 2
+    assert len(questions) == 50
+    assert sum(not q.answerable for q in questions) == 8
     results = verify(con, questions)
-    assert sum(r["status"] == "executed" for r in results) == 10
+    assert sum(r["status"] == "executed" for r in results) == 42
     semantic = next(q for q in questions if q.id == "q07")
     assert con.execute(semantic.gold_sql).fetchall() == [("green", 1), ("yellow", 1)]
 
@@ -136,7 +136,7 @@ def test_real_dataset():
         assert db.execute("SELECT count(*) FROM canonical_trips").fetchone()[0] == sum(
             s.row_count for s in manifest.files if s.service != "zones"
         )
-        assert sum(r["status"] == "executed" for r in verify(db, load_questions())) == 10
+        assert sum(r["status"] == "executed" for r in verify(db, load_questions())) == 42
 
 
 def test_valid_trip_boundaries_and_missing_fields(con):
